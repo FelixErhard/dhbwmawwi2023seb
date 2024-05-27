@@ -1,5 +1,7 @@
 package lecture.chapter7;
 
+import lecture.chapter8.NotEnoughFreeSlotsException;
+
 public class TravelAgency {
 
   public static void main(String[] args) {
@@ -20,12 +22,22 @@ public class TravelAgency {
 
     for(Bookable currentBookableEntity : bookableEntities){
       // Polymorphie mit Interfaces
-      System.out.println("Freie Plätze: " + currentBookableEntity.freeSlots());
-      boolean isBooked = currentBookableEntity.book(55);
-      if(isBooked){
-        System.out.println("Erfolgreich gebucht - restliche freie Plätze: " + currentBookableEntity.freeSlots());
-      } else {
-        System.out.println("Nicht genug freie Plätze!");
+
+      try {
+        System.out.println("Freie Plätze: " + currentBookableEntity.freeSlots());
+        currentBookableEntity.book(55);
+        System.out.println("Es wurden erfolgreich 55 Plätze gebucht!");
+      } catch (NotEnoughFreeSlotsException e){
+        System.out.println("Buchen ist fehlgeschlagen");
+        System.out.println(e.getMessage());
+
+        //currentBookableEntity.book(e.freeRemainingSlots);
+        return;
+      } catch (Exception e) {
+        // generischer Catch-Block für alle Ausnahmen
+        System.out.println("Fehler :-( ");
+      } finally {
+        System.out.println("Dieser Code wird IMMER! durchlaufen!");
       }
 
       if(currentBookableEntity instanceof Airplane currentAirplane){
